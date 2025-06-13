@@ -48,6 +48,8 @@ if st.button("🔍 Get Answer") and book_file and user_question.strip():
     # Embed and store in local Chroma vector DB (in memory)
     st.info("📦 Creating vector database...")
     embedding = OllamaEmbeddings(model="tinyllama")
+    os.environ["ALLOW_CHROMA_TELEMETRY"] = "FALSE"
+
     vectordb = Chroma.from_documents(documents=chunks, embedding=embedding)
 
     # Create RetrievalQA chain
