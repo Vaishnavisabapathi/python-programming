@@ -3,11 +3,11 @@ import os
 import tempfile
 import fitz  # PyMuPDF
 
-from langchain.embeddings import OllamaEmbeddings
-from langchain.vectorstores import Chroma
+from langchain_community.embeddings import OllamaEmbeddings
+from langchain_community.vectorstores import FAISS
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.llms import Ollama
-from langchain.document_loaders import PyMuPDFLoader
+from langchain_community.llms import Ollama
+from langchain_community.document_loaders import PyMuPDFLoader
 from langchain.chains import RetrievalQA
 
 st.set_page_config(page_title="AI Study Assistant", layout="centered")
@@ -45,12 +45,10 @@ if st.button("🔍 Get Answer") and book_file and user_question.strip():
     splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
     chunks = splitter.split_documents(docs)
 
-    # Embed and store in local Chroma vector DB (in memory)
-    st.info("📦 Creating vector database...")
+    # Embed and store in FAISS (in-memory, Streamlit Cloud-friendly)
+    st.info("📦 Creating in-memory vector store...")
     embedding = OllamaEmbeddings(model="tinyllama")
-    os.environ["ALLOW_CHROMA_TELEMETRY"] = "FALSE"
-
-    vectordb = Chroma.from_documents(documents=chunks, embedding=embedding)
+    vectordb = FAISS.from_documents(documents=chunks, embedding=embedding)
 
     # Create RetrievalQA chain
     st.info("🤖 Generating answer...")
