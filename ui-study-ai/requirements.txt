@@ -1,6 +1,9 @@
 streamlit
 langchain
 langchain-community
+chromadb==0.4.24
 pymupdf
 ollama
-chromadb
+protobuf==3.20.3
+opentelemetry-api==1.21.0
+opentelemetry-exporter-otlp==1.21.0
